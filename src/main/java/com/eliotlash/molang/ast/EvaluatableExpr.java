@@ -12,15 +12,18 @@ public class EvaluatableExpr implements Evaluatable {
         this.constant = expr instanceof Expr.Constant;
     }
 
+    @Override
     public double evaluate(Evaluator evaluator) {
         Double result = evaluator.evaluate(this.expr);
         return result == null ? 0 : result;
     }
 
+    @Override
     public boolean isConstant() {
         return this.constant;
     }
 
+    @Override
     public double getConstant() {
         if(!isConstant()) {
             return 0.0;

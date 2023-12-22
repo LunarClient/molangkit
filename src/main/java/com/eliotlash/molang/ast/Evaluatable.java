@@ -4,6 +4,8 @@ import java.util.List;
 
 public interface Evaluatable {
 
+    double evaluate(Evaluator evaluator);
+
     default boolean isConstant() {
         return false;
     }
