@@ -108,11 +108,24 @@ class FunctionsTest {
         assertEquals(10.0, evaluate("math.abs(-10)"));
         assertEquals(10.0, evaluate("math.abs(10)"));
 
-        assertEquals(Math.E, evaluate("math.exp(1)"));
+        assertEquals(Math.exp(1), evaluate("math.exp(1)"));
         assertEquals(0.0, evaluate("math.ln(1)"));
         assertEquals(2.0, evaluate("math.sqrt(4)"));
         assertEquals(2.0, evaluate("math.mod(5, 3)"));
         assertEquals(100.0, evaluate("math.pow(10, 2)"));
+
+        assertEquals(1.0, evaluate("!string.equals('minecraft:pig', 'minecraft:cow')"));
+        assertEquals(1.0, evaluate("string.equals('minecraft:cow', 'minecraft:cow')"));
+        assertEquals(0.0, evaluate("string.equals('COW', 'cow')"));
+        assertEquals(1.0, evaluate("string.equalsIgnoreCase('COW', 'cow')"));
+
+        assertEquals(13, evaluate("string.length('minecraft:cow')"));
+        assertEquals(0.0, evaluate("string.length('')"));
+        assertEquals(10.0, evaluate("'I am nothing' + 10"));
+
+        assertEquals(1.0, evaluate("system.print('\"1+1-1/1*1->([{9+1}]);\"')"));
+        assertEquals(1.0, evaluate("system.print('test')"));
+        assertEquals(1.0, evaluate("system.print('oh no' + 'math is hard')"));
     }
 
     private double evaluate(String expression) throws Exception {

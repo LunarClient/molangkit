@@ -136,6 +136,11 @@ public class Evaluator implements Expr.Visitor<Double>, Stmt.Visitor<Void> {
 
     @Override
     public Double visitBinOp(Expr.BinOp expr) {
+
+        // Evaluate binops on strings if the expressions are strings
+        if (expr.left() instanceof Expr.Str lhs && expr.right() instanceof Expr.Str rhs) {
+            return expr.operator().applyString(lhs.val(), rhs.val());
+        }
         return expr.operator().apply(() -> evaluate(expr.left()), () -> evaluate(expr.right()));
     }
 
@@ -213,9 +218,21 @@ public class Evaluator implements Expr.Visitor<Double>, Stmt.Visitor<Void> {
         return context.getVariableMap().getOrDefault(runtimeVariable, 0);
     }
 
+    @Override
+    public String visitString(Expr.Str str) {
+        return str.val();
+    }
+
     public Double evaluate(Expr expr) {
         Double result = expr.accept(this);
         return result == null ? 0 : result;
+    }
+
+    public String evaluateString(Expr expr) {
+        if (expr instanceof Expr.Str) {
+            return ((Expr.Str) expr).val();
+        }
+        return expr.accept(this).toString();
     }
 
     public Double evaluateNullable(Expr expr) {

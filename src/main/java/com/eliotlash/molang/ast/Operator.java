@@ -78,6 +78,21 @@ public enum Operator {
 		};
 	}
 
+
+	public double applyString(String lhs, String rhs) {
+		switch (this) {
+			case EQ -> {
+				return bool(lhs.equals(rhs));
+			}
+			case NEQ -> {
+				return bool(!lhs.equals(rhs));
+			}
+			default -> {
+				return 0.0;
+			}
+		}
+	}
+
 	private static double bool(boolean b) {
 		return b ? 1.0 : 0.0;
 	}

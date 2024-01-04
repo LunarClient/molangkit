@@ -13,6 +13,11 @@ public enum TokenType {
 	 */
 	IDENTIFIER,
 
+	/**
+	 * A token for a string
+	 */
+	STRING,
+
 	// Single character tokens:
 
 	// '!'
@@ -76,6 +81,8 @@ public enum TokenType {
 	ARROW,
 	// '??'
 	COALESCE,
+
+	QUOTE,
 
 	EOF,
 

@@ -105,6 +105,11 @@ public class ASTTransformation implements Expr.Visitor<Expr>, Stmt.Visitor<Stmt>
 	}
 
 	@Override
+	public String visitString(Expr.Str str) {
+		return str.val();
+	}
+
+	@Override
 	public Expr visitSwitchContext(Expr.SwitchContext expr) {
 		return new Expr.SwitchContext(expr.left(), visit(expr.right()));
 	}

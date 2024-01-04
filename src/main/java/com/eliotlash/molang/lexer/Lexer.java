@@ -68,15 +68,57 @@ public class Lexer {
 			return;
 		}
 
-		var token = tryOperator(c);
 
+
+		var token = tryOperator(c);
 		if (token != null) {
+			if (token == TokenType.QUOTE) {
+				try {
+					eatString();
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+				return;
+			}
+
 			setToken(token);
 		} else if (isDigit(c)) {
 			eatNumeral();
 		} else if (isIdentifierStart(c)) {
 			eatIdentifier();
 		}
+	}
+
+
+	private void eatString() throws Exception {
+		// skip over the current character ('), we don't want that to part of the string.
+		// The lexer seems to always include the startPos.
+		// Other option would be to make it like a state machine where if it comes across a quote
+		// it'll consume everything within it until it reaches another quote.
+		// But that would be behavior specific to Strings, and doesn't fit with
+		// current behavior for numerals.
+		startPos++;
+
+		// while we have a next character, and the next character does not equal "'"
+		// we are safe to advance.
+		while (hasNextChar() && peek() != '\'') {
+			advance();
+		}
+
+		// Early fail for unclosed strings
+		if (!hasNextChar() || peek() != '\'') {
+			System.out.println(peek());
+			// We want to skip over the closing quote.
+			// We don't however want to include it in the substring, so we skip over, after we set token.
+			// However, if we find that there isn't another quote, we mark it as an unclosed string
+			throw new Exception("string not closed");
+		}
+
+		setToken(TokenType.STRING);
+
+
+		// Skip over the next quote so the lexer doesn't pick it up as a new string.
+		advance();
 	}
 
 	private void eatWhitespace() {
@@ -111,54 +153,54 @@ public class Lexer {
 
 	private TokenType tryOperator(char c) {
 		switch (c) {
-		case '!' -> {
-			if (match('=')) {
-				return TokenType.BANG_EQUAL;
+			case '!' -> {
+				if (match('=')) {
+					return TokenType.BANG_EQUAL;
+				}
+				return TokenType.NOT;
 			}
-			return TokenType.NOT;
-		}
-		case '=' -> {
-			if (match('=')) {
-				return TokenType.EQUAL_EQUAL;
+			case '=' -> {
+				if (match('=')) {
+					return TokenType.EQUAL_EQUAL;
+				}
+				return TokenType.EQUALS;
 			}
-			return TokenType.EQUALS;
-		}
-		case '<' -> {
-			if (match('=')) {
-				return TokenType.LESS_EQUAL;
+			case '<' -> {
+				if (match('=')) {
+					return TokenType.LESS_EQUAL;
+				}
+				return TokenType.LESS_THAN;
 			}
-			return TokenType.LESS_THAN;
-		}
-		case '>' -> {
-			if (match('=')) {
-				return TokenType.GREATER_EQUAL;
+			case '>' -> {
+				if (match('=')) {
+					return TokenType.GREATER_EQUAL;
+				}
+				return TokenType.GREATER_THAN;
 			}
-			return TokenType.GREATER_THAN;
-		}
-		case '&' -> {
-			if (match('&')) {
+			case '&' -> {
+				if (match('&')) {
+					return TokenType.AND;
+				}
 				return TokenType.AND;
 			}
-			return TokenType.AND;
-		}
-		case '|' -> {
-			if (match('|')) {
+			case '|' -> {
+				if (match('|')) {
+					return TokenType.OR;
+				}
 				return TokenType.OR;
 			}
-			return TokenType.OR;
-		}
-		case '-' -> {
-			if (match('>')) {
-				return TokenType.ARROW;
+			case '-' -> {
+				if (match('>')) {
+					return TokenType.ARROW;
+				}
+				return TokenType.MINUS;
 			}
-			return TokenType.MINUS;
-		}
-		case '?' -> {
-			if (match('?')) {
-				return TokenType.COALESCE;
+			case '?' -> {
+				if (match('?')) {
+					return TokenType.COALESCE;
+				}
+				return TokenType.QUESTION;
 			}
-			return TokenType.QUESTION;
-		}
 		}
 
 		return switch (c) {
@@ -177,6 +219,7 @@ public class Lexer {
 			case ';' -> TokenType.SEMICOLON;
 			case ':' -> TokenType.COLON;
 			case '.' -> TokenType.DOT;
+			case '\'' -> TokenType.QUOTE;
 			default -> null;
 		};
 	}

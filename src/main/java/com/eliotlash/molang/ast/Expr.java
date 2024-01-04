@@ -40,9 +40,9 @@ public interface Expr {
             Struct struct = (Struct) o;
 
             if (!target.equals(struct.target)) return false;
-			if(parent == null) {
-				return struct.parent == null;
-			}
+            if(parent == null) {
+                return struct.parent == null;
+            }
             return parent.equals(struct.parent);
         }
 
@@ -213,6 +213,13 @@ public interface Expr {
         }
     }
 
+    record Str(String val) implements Expr {
+        @Override
+        public <R> R accept(Visitor<R> visitor) {
+            return null;
+        }
+    }
+
     interface Visitor<R> {
         default R visit(Expr node) {
             return node.accept(this);
@@ -245,5 +252,7 @@ public interface Expr {
         R visitSwitchContext(SwitchContext expr);
 
         R visitVariable(Variable expr);
+
+        String visitString(Str str);
     }
 }

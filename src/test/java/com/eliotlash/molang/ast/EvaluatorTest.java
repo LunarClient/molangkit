@@ -263,4 +263,14 @@ class EvaluatorTest extends TestBase {
 		Double result = new Expr.BinOp(args.op(), c(args.lhs()), c(args.rhs())).accept(eval);
 		assertEquals(args.expectedResult(), result, 0.000001);
 	}
+
+
+	@Test
+	void stringEqualityTest() {
+		// the binops != & == use String#equals behind the scenes
+		assertEquals(1.0, eval.evaluate(parseE("'minecraft:pig' != 'minecraft:cow'")));
+		assertEquals(0.0, eval.evaluate(parseE("'minecraft:pig' == 'minecraft:cow'")));
+		assertEquals(1.0, eval.evaluate(parseE("'minecraft:pig' != ''")));
+		assertEquals(1.0, eval.evaluate(parseE("'' == ''")));
+	}
 }

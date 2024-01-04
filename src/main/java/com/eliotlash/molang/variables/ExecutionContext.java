@@ -14,7 +14,12 @@ import com.eliotlash.molang.functions.rounding.Ceil;
 import com.eliotlash.molang.functions.rounding.Floor;
 import com.eliotlash.molang.functions.rounding.Round;
 import com.eliotlash.molang.functions.rounding.Trunc;
+import com.eliotlash.molang.functions.strings.Length;
+import com.eliotlash.molang.functions.strings.Print;
+import com.eliotlash.molang.functions.strings.StrEquals;
+import com.eliotlash.molang.functions.strings.StrEqualsIgnoreCase;
 import com.eliotlash.molang.functions.utility.*;
+
 import com.eliotlash.molang.functions.utility.Random;
 import com.eliotlash.molang.utils.MolangUtils;
 import it.unimi.dsi.fastutil.Pair;
@@ -24,9 +29,9 @@ import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 import java.util.*;
 
 public class ExecutionContext {
-    
-    private static final Map<FunctionDefinition, Function> MATH_FUNCTIONS;
-    
+
+    private static final Map<FunctionDefinition, Function> BUILTIN_FUNCTIONS;
+
     private final Evaluator evaluator;
 
     public final Stack<Expr.Access> contextStack = new Stack<>();
@@ -42,7 +47,7 @@ public class ExecutionContext {
     public ExecutionContext(Evaluator evaluator) {
         this.evaluator = evaluator;
 
-        registerFunctions(MATH_FUNCTIONS);
+        registerFunctions(BUILTIN_FUNCTIONS);
     }
 
     public Evaluator getEvaluator() {
@@ -118,7 +123,7 @@ public class ExecutionContext {
     public Function getFunction(FunctionDefinition definition) {
         return this.functionMap.get(definition);
     }
-    
+
     private static FunctionDefinition asFunctionDefinition(String target, Function function) {
         return new FunctionDefinition(new Expr.Variable(target), function.getName());
     }
@@ -126,7 +131,7 @@ public class ExecutionContext {
     private static void addFunction(Map<FunctionDefinition, Function> map, String target, Function func) {
         map.put(asFunctionDefinition(target, func), func);
     }
-    
+
     static {
         Map<FunctionDefinition, Function> map = new HashMap<>();
         addFunction(map, "math", new Abs("abs"));
@@ -157,6 +162,10 @@ public class ExecutionContext {
         addFunction(map, "math", new RandomInteger("random_integer"));
         addFunction(map, "math", new DiceRoll("dice_roll"));
         addFunction(map, "math", new DiceRollInteger("dice_roll_integer"));
-        MATH_FUNCTIONS = Map.copyOf(map);
+        addFunction(map, "system", new Print("print"));
+        addFunction(map, "string", new StrEquals("equals"));
+        addFunction(map, "string", new StrEqualsIgnoreCase("equalsIgnoreCase"));
+        addFunction(map, "string", new Length("length"));
+        BUILTIN_FUNCTIONS = Map.copyOf(map);
     }
 }

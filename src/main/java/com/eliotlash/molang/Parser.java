@@ -387,6 +387,10 @@ public class Parser {
             return new Expr.Constant(Double.parseDouble(previous().lexeme()));
         }
 
+        if (match(STRING)) {
+            return new Expr.Str(previous().lexeme());
+        }
+
         if (match(OPEN_PAREN)) {
             Expr expr = expression();
             consume(CLOSE_PAREN, "Expect ')' after expression.");
