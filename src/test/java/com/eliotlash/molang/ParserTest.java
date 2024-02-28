@@ -124,8 +124,8 @@ public class ParserTest extends TestBase {
 		assertEquals(op(op(one, Operator.GT, one), Operator.EQ, one), e("1 > 1 == 1"));
 
 		// comparison/coalesce
-		assertEquals(op(one, Operator.LT, new Expr.Coalesce(a, one)), e("1 < a ?? 1"));
-		assertEquals(op(new Expr.Coalesce(a, one), Operator.LT, one), e("a ?? 1 < 1"));
+		assertEquals(new Expr.Coalesce(op(one, Operator.LT, a), one), e("1 < a ?? 1"));
+		assertEquals(new Expr.Coalesce(a, op(one, Operator.LT, one)), e("a ?? 1 < 1"));
 
 		// coalesce/term
 		assertEquals(new Expr.Coalesce(a, op(one, Operator.SUB, one)), e("a ?? 1 - 1"));
@@ -143,6 +143,33 @@ public class ParserTest extends TestBase {
 		assertEquals(op(one, Operator.POW, new Expr.Negate(one)), e("1 ^ -1"));
 		assertEquals(op(new Expr.Negate(one), Operator.POW, new Expr.Negate(one)), e("-1 ^ -1"));
 		assertEquals(op(new Expr.Negate(one), Operator.POW, one), e("-1 ^ 1"));
+
+		// ternary
+		assertEquals(
+				new Expr.Ternary(
+						op(a, Operator.GT, c(1)),
+						c(1),
+						c(0)
+				),
+				e("a > 1 ? 1 : 0")
+		);
+		assertEquals(
+				new Expr.Ternary(
+						op(a, Operator.GT, c(1)),
+						new Expr.Ternary(
+								op(a, Operator.LT, c(1)),
+								c(0),
+								c(1)
+						),
+						new Expr.Ternary(
+								op(a, Operator.LT, c(1)),
+								c(0),
+								c(1)
+						)
+				),
+				e("a > 1 ? a < 1 ? 0 : 1 : a < 1 ? 0 : 1")
+		);
+
 	}
 
 	@Test

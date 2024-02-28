@@ -181,7 +181,7 @@ public class Parser {
     }
 
     private Expr assignment() {
-        Expr expr = disjunction();
+        Expr expr = coalesce();
 
         if (match(EQUALS)) {
             Token equals = previous();
@@ -230,11 +230,11 @@ public class Parser {
     }
 
     private Expr comparison() {
-        var expr = coalesce();
+        var expr = term();
 
         while (match(GREATER_THAN, GREATER_EQUAL, LESS_THAN, LESS_EQUAL)) {
             Token operator = previous();
-            Expr right = coalesce();
+            Expr right = term();
             expr = new Expr.BinOp(Operator.from(operator), expr, right);
         }
 
@@ -242,10 +242,10 @@ public class Parser {
     }
 
     private Expr coalesce() {
-        var expr = term();
+        var expr = ternary();
 
         while (match(COALESCE)) {
-            Expr right = term();
+            Expr right = ternary();
             expr = new Expr.Coalesce(expr, right);
         }
 
@@ -283,14 +283,8 @@ public class Parser {
         return expr;
     }
 
-    private Expr unary() {
-        if (match(NOT)) {
-            return new Expr.Not(unary());
-        }
-        if (match(MINUS)) {
-            return new Expr.Negate(unary());
-        }
-        Expr access = access();
+    private Expr ternary() {
+        Expr access = disjunction();
         if (match(QUESTION)) {
             Expr left = expression();
             if (match(COLON)) {
@@ -300,6 +294,17 @@ public class Parser {
                 return new Expr.Conditional(access, left);
             }
         }
+        return access;
+    }
+
+    private Expr unary() {
+        if (match(NOT)) {
+            return new Expr.Not(unary());
+        }
+        if (match(MINUS)) {
+            return new Expr.Negate(unary());
+        }
+        Expr access = access();
         if (match(ARROW)) {
             Expr right = expression();
             if (access instanceof Expr.Access acc) {
