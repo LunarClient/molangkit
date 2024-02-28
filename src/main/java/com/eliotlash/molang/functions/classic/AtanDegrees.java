@@ -7,9 +7,9 @@ import com.eliotlash.molang.variables.ExecutionContext;
 /**
  * Arc tangent function
  */
-public class Atan extends Function {
+public class AtanDegrees extends Function {
 
-    public Atan(String name) {
+    public AtanDegrees(String name) {
         super(name);
     }
 
@@ -20,7 +20,7 @@ public class Atan extends Function {
 
     @Override
     public double _evaluate(Expr[] arguments, ExecutionContext ctx) {
-        double a = this.evaluateArgument(arguments, ctx, 0);
+        double a = this.evaluateArgument(arguments, ctx, 0) / 180 * Math.PI;
         return Math.atan(a);
     }
 }
