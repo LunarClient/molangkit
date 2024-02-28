@@ -43,9 +43,9 @@ public class ExecutionContext {
         registerFunction("math", new Cos("cosradians"));
         registerFunction("math", new SinDegrees("sin"));
         registerFunction("math", new Sin("sinradians"));
-        registerFunction("math", new Asin("asin"));
-        registerFunction("math", new Acos("acos"));
-        registerFunction("math", new Atan("atan"));
+        registerFunction("math", new AsinDegrees("asin"));
+        registerFunction("math", new AcosDegrees("acos"));
+        registerFunction("math", new AtanDegrees("atan"));
         registerFunction("math", new Atan2("atan2"));
         registerFunction("math", new Exp("exp"));
         registerFunction("math", new Ln("ln"));

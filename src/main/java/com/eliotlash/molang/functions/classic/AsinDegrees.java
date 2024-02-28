@@ -5,11 +5,11 @@ import com.eliotlash.molang.functions.Function;
 import com.eliotlash.molang.variables.ExecutionContext;
 
 /**
- * Arc tangent function
+ * Arc sine function
  */
-public class Atan extends Function {
+public class AsinDegrees extends Function {
 
-    public Atan(String name) {
+    public AsinDegrees(String name) {
         super(name);
     }
 
@@ -20,7 +20,10 @@ public class Atan extends Function {
 
     @Override
     public double _evaluate(Expr[] arguments, ExecutionContext ctx) {
-        double a = this.evaluateArgument(arguments, ctx, 0);
-        return Math.atan(a);
+        double a = this.evaluateArgument(arguments, ctx, 0) / 180 * Math.PI;
+        if (Math.abs(a) > 1) {
+            return 0;
+        }
+        return Math.asin(a);
     }
 }
