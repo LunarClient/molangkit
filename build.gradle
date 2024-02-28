@@ -14,7 +14,7 @@ plugins {
 
 apply plugin: 'maven-publish'
 apply plugin: 'com.google.cloud.artifactregistry.gradle-plugin'
-version = "1.0.9"
+version = "1.0.10"
 group = "com.eliotlash.molang"
 archivesBaseName = "particleman"
 
