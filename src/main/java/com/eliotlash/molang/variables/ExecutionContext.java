@@ -139,6 +139,7 @@ public class ExecutionContext {
         addFunction(map, "math", new Cos("cosradians"));
         addFunction(map, "math", new SinDegrees("sin"));
         addFunction(map, "math", new Sin("sinradians"));
+        addFunction(map, "math", new Sign("sign"));
         addFunction(map, "math", new Asin("asin"));
         addFunction(map, "math", new Acos("acos"));
         addFunction(map, "math", new Atan("atan"));
