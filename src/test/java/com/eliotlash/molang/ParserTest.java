@@ -1,6 +1,7 @@
 package com.eliotlash.molang;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
 
@@ -192,6 +193,7 @@ public class ParserTest extends TestBase {
 	void testVariables() {
 		assertEquals(v("test"), e("test"));
 		assertEquals(v("test_other"), e("test_other"));
+        assertThrows(ParseException.class, () -> e("TeST"));
 	}
 
 	@Test

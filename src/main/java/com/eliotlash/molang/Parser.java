@@ -384,6 +384,11 @@ public class Parser {
 
         if (match(IDENTIFIER)) {
             String lexeme = previous().lexeme();
+
+            //enforce lowercase variable names
+            if (!lexeme.toLowerCase().equals(lexeme)) {
+                throw error(previous(), "Variable names must be lowercase.");
+            }
             Expr constant = constants.get(lexeme);
             return constant == null ? new Expr.Variable(lexeme) : constant;
         }
