@@ -22,7 +22,7 @@ import com.eliotlash.molang.functions.utility.*;
 
 import com.eliotlash.molang.functions.utility.Random;
 import com.eliotlash.molang.utils.MolangUtils;
-import it.unimi.dsi.fastutil.Pair;
+import com.eliotlash.molang.utils.ParserUtils;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleOpenHashMap;
 
@@ -65,22 +65,16 @@ public class ExecutionContext {
     /**
      * Call with "query.something"
      */
-    public RuntimeVariable getCachedVariable(String var) {
-        return variableCache.computeIfAbsent(var, name -> {
-            RuntimeVariable runtimeVariable = parseRuntimeVariable(name, null);
-            return runtimeVariable;
-        });
+    public RuntimeVariable getCachedVariable(VariableFlavor flavor, String var) {
+        return variableCache.computeIfAbsent(var, name -> parseRuntimeVariable(flavor, name, null));
     }
 
-    public RuntimeVariable parseRuntimeVariable(String name, Expr.Access access) {
-        String[] split = name.split("\\.", 2);
-
-        VariableFlavor flavor = VariableFlavor.parse(split[0]);
+    public RuntimeVariable parseRuntimeVariable(VariableFlavor flavor, String variableName, Expr.Access access) {
         RuntimeVariable runtimeVariable;
-        if (split.length == 2 && flavor != null) {
-            runtimeVariable = new RuntimeVariable(split[1], flavor);
+        if (flavor != null) {
+            runtimeVariable = new RuntimeVariable(flavor, variableName);
         } else {
-            runtimeVariable = new RuntimeVariable(name, null);
+            runtimeVariable = new RuntimeVariable(null, variableName);
         }
 
         if (access != null) {
@@ -95,13 +89,13 @@ public class ExecutionContext {
         return runtimeVariable;
     }
 
-    public void setVariable(String var, double value) {
-        RuntimeVariable cachedVariable = getCachedVariable(var);
+    public void setVariable(VariableFlavor flavor, String var, double value) {
+        RuntimeVariable cachedVariable = getCachedVariable(flavor, var);
         variableMap.put(cachedVariable, value);
     }
 
-    public void setVariable(String var, boolean val) {
-        setVariable(var, MolangUtils.booleanToFloat(val));
+    public void setVariable(VariableFlavor flavor, String variableName, boolean val) {
+        setVariable(flavor, variableName, MolangUtils.booleanToFloat(val));
     }
 
     public void registerFunction(String target, Function function) {
@@ -124,7 +118,7 @@ public class ExecutionContext {
     }
 
     private static FunctionDefinition asFunctionDefinition(String target, Function function) {
-        return new FunctionDefinition(new Expr.Variable(target), function.getName());
+        return new FunctionDefinition(ParserUtils.createVariableFromString(target), function.getName());
     }
 
     private static void addFunction(Map<FunctionDefinition, Function> map, String target, Function func) {

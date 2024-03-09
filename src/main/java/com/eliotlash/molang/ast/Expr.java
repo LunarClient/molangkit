@@ -1,5 +1,7 @@
 package com.eliotlash.molang.ast;
 
+import com.eliotlash.molang.variables.VariableFlavor;
+
 import java.util.List;
 
 public interface Expr {
@@ -188,9 +190,10 @@ public interface Expr {
     }
 
     /**
-     * some_identifier
+     * @param flavor optional
+     * @param name
      */
-    record Variable(String name) implements Expr, Accessible {
+    record Variable(VariableFlavor flavor, String name) implements Expr, Accessible {
 
         @Override
         public <R> R accept(Visitor<R> visitor) {

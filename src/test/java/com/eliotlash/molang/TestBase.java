@@ -3,6 +3,7 @@ package com.eliotlash.molang;
 import com.eliotlash.molang.ast.Expr;
 import com.eliotlash.molang.ast.Operator;
 import com.eliotlash.molang.ast.Stmt;
+import com.eliotlash.molang.utils.ParserUtils;
 
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class TestBase {
     }
 
     protected static Expr.Variable v(String var) {
-        return new Expr.Variable(var);
+        return ParserUtils.createVariableFromString(var);
     }
 
     protected static Stmt.Expression s(Expr expr) {

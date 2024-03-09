@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import com.eliotlash.molang.Molang;
+import com.eliotlash.molang.utils.ParserUtils;
 import com.eliotlash.molang.variables.ExecutionContext;
+import com.eliotlash.molang.variables.VariableFlavor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -64,17 +66,17 @@ class EvaluatorTest extends TestBase {
 
 	@Test
 	void visitVariable() {
-		assertEquals(0, eval.visitVariable(new Expr.Variable("query.test")));
+		assertEquals(0, eval.visitVariable(ParserUtils.createVariableFromString("query.test")));
 
 		ExecutionContext context = new ExecutionContext(eval);
 		eval.setExecutionContext(context);
-		context.setVariable("q.test", 5);
-		context.setVariable("query.me", 5);
-		context.setVariable("hello", 5);
-		assertEquals(5, eval.visitVariable(new Expr.Variable("query.test")));
-		assertEquals(5, eval.visitVariable(new Expr.Variable("q.test")));
-		assertEquals(5, eval.visitVariable(new Expr.Variable("q.me")));
-		assertEquals(5, eval.visitVariable(new Expr.Variable("hello")));
+		context.setVariable(VariableFlavor.QUERY, "test", 5);
+		context.setVariable(VariableFlavor.QUERY, "me", 5);
+		context.setVariable(null, "hello", 5);
+		assertEquals(5, eval.visitVariable(ParserUtils.createVariableFromString("query.test")));
+		assertEquals(5, eval.visitVariable(ParserUtils.createVariableFromString("q.test")));
+		assertEquals(5, eval.visitVariable(ParserUtils.createVariableFromString("q.me")));
+		assertEquals(5, eval.visitVariable(ParserUtils.createVariableFromString("hello")));
 	}
 
 	@Test

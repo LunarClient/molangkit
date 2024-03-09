@@ -7,6 +7,7 @@ import com.eliotlash.molang.ast.Stmt;
 import com.eliotlash.molang.lexer.Keyword;
 import com.eliotlash.molang.lexer.Token;
 import com.eliotlash.molang.lexer.TokenType;
+import com.eliotlash.molang.utils.ParserUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -357,7 +358,7 @@ public class Parser {
 
     private Expr.Struct finishStruct(Expr.Struct parentStruct) {
         if(match(IDENTIFIER)) {
-            Expr.Struct child = new Expr.Struct(new Expr.Variable(previous().lexeme()), parentStruct, new ArrayList<>());
+            Expr.Struct child = new Expr.Struct(ParserUtils.createVariableFromString(previous().lexeme()), parentStruct, new ArrayList<>());
             parentStruct.children().add(child);
             if(!match(DOT)) return child;
             parentStruct = finishStruct(child);
@@ -390,7 +391,7 @@ public class Parser {
                 throw error(previous(), "Variable names must be lowercase.");
             }
             Expr constant = constants.get(lexeme);
-            return constant == null ? new Expr.Variable(lexeme) : constant;
+            return constant == null ? ParserUtils.createVariableFromString(lexeme) : constant;
         }
 
         if (match(NUMERAL)) {
@@ -483,4 +484,5 @@ public class Parser {
     private Token previous() {
         return input.get(current - 1);
     }
+
 }

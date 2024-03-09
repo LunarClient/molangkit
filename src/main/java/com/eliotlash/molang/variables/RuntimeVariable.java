@@ -1,4 +1,4 @@
 package com.eliotlash.molang.variables;
 
-public record RuntimeVariable(String name, VariableFlavor flavor) {
+public record RuntimeVariable(VariableFlavor flavor, String name) {
 }

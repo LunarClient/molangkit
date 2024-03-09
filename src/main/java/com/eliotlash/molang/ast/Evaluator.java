@@ -102,7 +102,7 @@ public class Evaluator implements Expr.Visitor<Double>, Stmt.Visitor<Void> {
             return context.functionScopedArguments.getDouble(expr);
         }
         if (expr.target() instanceof Expr.Variable variable) {
-            RuntimeVariable cachedVariable = context.getCachedVariable(variable.name() + "." + expr.member());
+            RuntimeVariable cachedVariable = context.getCachedVariable(variable.flavor(), expr.member());
             if (context.getVariableMap().containsKey(cachedVariable)) {
                 return context.getVariableMap().getDouble(cachedVariable);
             }
@@ -121,7 +121,7 @@ public class Evaluator implements Expr.Visitor<Double>, Stmt.Visitor<Void> {
         if (expr.variable() instanceof Expr.Access access) {
             if (access.target() instanceof Expr.Variable target) {
                 context.assignableMap.put(access, value);
-                context.parseRuntimeVariable(target.name() + "." + access.member(), access);
+                context.parseRuntimeVariable(target.flavor(), target.name(), access);
             }
             else if (access.target() instanceof Expr.Struct struct) {
                 context.getStructMap().put(struct, value);
@@ -214,7 +214,7 @@ public class Evaluator implements Expr.Visitor<Double>, Stmt.Visitor<Void> {
 
     @Override
     public Double visitVariable(Expr.Variable expr) {
-        RuntimeVariable runtimeVariable = context.getCachedVariable(expr.name());
+        RuntimeVariable runtimeVariable = context.getCachedVariable(expr.flavor(), expr.name());
         return context.getVariableMap().getOrDefault(runtimeVariable, 0);
     }
 
