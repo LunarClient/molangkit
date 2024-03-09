@@ -35,7 +35,7 @@ public class ExecutionContext {
     private final Evaluator evaluator;
 
     public final Stack<Expr.Access> contextStack = new Stack<>();
-    public final Map<VariableFlavor, List<Pair<RuntimeVariable, Expr.Access>>> flavorCache = new HashMap<>();
+    public final Map<VariableFlavor, Map<RuntimeVariable, Expr.Access>> flavorCache = new HashMap<>();
     public final Object2DoubleMap<Assignable> assignableMap = new Object2DoubleOpenHashMap<>();
     public Object2DoubleMap<Assignable> functionScopedArguments = new Object2DoubleOpenHashMap<>();
 
@@ -84,13 +84,12 @@ public class ExecutionContext {
         }
 
         if (access != null) {
-            Pair<RuntimeVariable, Expr.Access> pair = Pair.of(runtimeVariable, access);
             if (!flavorCache.containsKey(flavor)) {
-                flavorCache.put(flavor, new ArrayList<>());
+                flavorCache.put(flavor, new HashMap<>());
             }
-            List<Pair<RuntimeVariable, Expr.Access>> list = flavorCache.get(flavor);
-            if (!list.contains(pair)) {
-                list.add(pair);
+            Map<RuntimeVariable, Expr.Access> map = flavorCache.get(flavor);
+            if (!map.containsKey(runtimeVariable)) {
+                map.put(runtimeVariable, access);
             }
         }
         return runtimeVariable;
