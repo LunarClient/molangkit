@@ -13,10 +13,8 @@ public class CompileConstants {
 	public Map<String, Expr.Constant> constants = new HashMap<>();
 
 	public CompileConstants() {
-		this.registerConstant("PI", Math.PI);
 		// Bedrock Parity
 		this.registerConstant("math.pi", Math.PI);
-		this.registerConstant("E", Math.E);
 	}
 
 	public void registerConstant(String name, double value) {

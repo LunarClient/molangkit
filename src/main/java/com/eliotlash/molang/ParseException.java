@@ -13,6 +13,6 @@ public class ParseException extends RuntimeException {
 
 	@Override
 	public String getMessage() {
-		return faulty.lexeme() + ' ' + super.getMessage();
+		return super.getMessage() + ": \"" + faulty.lexeme() + "\"";
 	}
 }

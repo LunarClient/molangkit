@@ -38,7 +38,7 @@ public class Parser {
      */
     public Expr parseExpression() {
         Expr expr = expression();
-        consume(EOF, "Expect end of expression.");
+        consume(EOF, "Expect end of expression");
         return expr;
     }
 
@@ -49,7 +49,7 @@ public class Parser {
      */
     public Stmt parseStatement() {
         Stmt expr = statement();
-        consume(EOF, "Expect end of statement.");
+        consume(EOF, "Expect end of statement");
         return expr;
     }
 
@@ -83,30 +83,30 @@ public class Parser {
 
     private Stmt.Expression expressionStatement() {
         Expr expr = expression();
-        consume(SEMICOLON, "Expect ';' after expression.");
+        consume(SEMICOLON, "Expect ';' after expression");
         return new Stmt.Expression(expr);
     }
 
     private Stmt breakStatement() {
-        consume(SEMICOLON, "Expect ';' after break statement.");
+        consume(SEMICOLON, "Expect ';' after break statement");
         return new Stmt.Break();
     }
 
     private Stmt continueStatement() {
-        consume(SEMICOLON, "Expect ';' after continue statement.");
+        consume(SEMICOLON, "Expect ';' after continue statement");
         return new Stmt.Continue();
     }
 
     private Stmt loopStatement() {
-        consume(OPEN_PAREN, "Expect '(' for loop args.");
+        consume(OPEN_PAREN, "Expect '(' for loop args");
 
         List<Expr> arguments = arguments();
 
         if (arguments.size() != 2) {
-            throw error(peek(), "Expect 2 arguments for loop.");
+            throw error(peek(), "Expect 2 arguments for loop");
         }
 
-        consume(SEMICOLON, "Expect ';' after loop statement.");
+        consume(SEMICOLON, "Expect ';' after loop statement");
 
         Expr count = arguments.get(0);
         Expr expr = arguments.get(1);
@@ -121,7 +121,7 @@ public class Parser {
         List<Expr> arguments = arguments();
 
         if (arguments.size() != 1) {
-            throw error(peek(), "Expect condition for if statement.");
+            throw error(peek(), "Expect condition for if statement");
         }
 
         Expr expr = expression();
@@ -144,7 +144,7 @@ public class Parser {
         List<Expr> arguments = arguments();
 
         if (arguments.size() != 1) {
-            throw error(peek(), "Expect condition for elif statement.");
+            throw error(peek(), "Expect condition for elif statement");
         }
 
         Expr expr = expression();
@@ -173,7 +173,7 @@ public class Parser {
     private Stmt returnStatement() {
         Expr value = expression();
 
-        consume(SEMICOLON, "Expect ';' after return statement.");
+        consume(SEMICOLON, "Expect ';' after return statement");
         return new Stmt.Return(value);
     }
 
@@ -192,7 +192,7 @@ public class Parser {
                 return new Expr.Assignment(v, value);
             }
 
-            throw error(equals, "Invalid assignment target.");
+            throw error(equals, "Invalid assignment target");
         }
 
         return expr;
@@ -323,13 +323,13 @@ public class Parser {
             Token dot = previous();
 
             if (!(expr instanceof Expr.Variable v)) {
-                throw error(dot, "Invalid access target.");
+                throw error(dot, "Invalid access target");
             }
 
             if (match(IDENTIFIER)) {
                 return finishAccess(v);
             } else {
-                throw error(dot, "Expect identifier after '.'.");
+                throw error(dot, "Expect identifier after '.'");
             }
         } else {
             return expr;
@@ -374,7 +374,7 @@ public class Parser {
             } while (match(COMMA));
         }
 
-        consume(CLOSE_PAREN, "Expect ')' after arguments.");
+        consume(CLOSE_PAREN, "Expect ')' after arguments");
         return arguments;
     }
 
@@ -388,7 +388,7 @@ public class Parser {
 
             //enforce lowercase variable names
             if (!lexeme.toLowerCase().equals(lexeme)) {
-                throw error(previous(), "Variable names must be lowercase.");
+                throw error(previous(), "Variable names must be lowercase");
             }
             Expr constant = constants.get(lexeme);
             return constant == null ? ParserUtils.createVariableFromString(lexeme) : constant;
@@ -404,11 +404,11 @@ public class Parser {
 
         if (match(OPEN_PAREN)) {
             Expr expr = expression();
-            consume(CLOSE_PAREN, "Expect ')' after expression.");
+            consume(CLOSE_PAREN, "Expect ')' after expression");
             return new Expr.Group(expr);
         }
 
-        throw error(peek(), "Expect expression.");
+        throw error(peek(), "Expect expression");
     }
 
     private Expr.Block block() {
@@ -417,7 +417,7 @@ public class Parser {
         while (!isAtEnd() && !check(CLOSE_BRACE)) {
             statements.add(statement());
         }
-        consume(CLOSE_BRACE, "Expect '}' after block.");
+        consume(CLOSE_BRACE, "Expect '}' after block");
         return new Expr.Block(statements);
     }
 
