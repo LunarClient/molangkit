@@ -7,9 +7,9 @@ import com.eliotlash.molang.variables.ExecutionContext;
 /**
  * Arc cosine function
  */
-public class AcosDegrees extends Function {
+public class Acos extends Function {
 
-    public AcosDegrees(String name) {
+    public Acos(String name) {
         super(name);
     }
 
@@ -20,7 +20,7 @@ public class AcosDegrees extends Function {
 
     @Override
     public double _evaluate(Expr[] arguments, ExecutionContext ctx) {
-        double a = this.evaluateArgument(arguments, ctx, 0) / 180 * Math.PI;
+        double a = this.evaluateArgument(arguments, ctx, 0);
         if (Math.abs(a) > 1) {
             return 0;
         }
