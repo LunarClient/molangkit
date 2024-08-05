@@ -29,7 +29,8 @@ public enum VariableFlavor {
 	 */
 	READOUT("readout", "r"),
 
-    LUNAR("lunar", "l");
+    LUNAR("lunar", "l"),
+    OPTION("option", "o");
 
 	public final String name;
 	public final String alias;
