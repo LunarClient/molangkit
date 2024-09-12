@@ -71,8 +71,10 @@ public class ExecutionContext {
 
     public RuntimeVariable parseRuntimeVariable(VariableFlavor flavor, String variableName, Expr.Access access) {
         RuntimeVariable runtimeVariable;
-        if (flavor != null) {
+        if (flavor != null && variableName != null) {
             runtimeVariable = new RuntimeVariable(flavor, variableName);
+        } else if (flavor != null) {
+            runtimeVariable = new RuntimeVariable(flavor, access.member());
         } else {
             runtimeVariable = new RuntimeVariable(null, variableName);
         }
