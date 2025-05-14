@@ -52,7 +52,7 @@ publishing {
     }
     repositories {
         maven {
-            url "artifactregistry://us-maven.pkg.dev/moonsworth-299m4oir/maven-public"
+            url "artifactregistry://us-maven.pkg.dev/mw-lunarclient-maven-repo/public"
         }
     }
 }
